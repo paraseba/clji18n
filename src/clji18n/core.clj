@@ -1,5 +1,6 @@
 (ns clji18n.core
-  (:require [clojure.string :as s]))
+  (:require [clojure.string :as s])
+  (:import java.text.MessageFormat))
 
 (defrecord Locale [language country variant])
 
@@ -43,3 +44,14 @@
     #(and (has-key? % key) (get-resource % key))
     (bundle-seq tree locale)))
 
+(defn java-locale [{:keys (language country variant)}]
+  (java.util.Locale. language (or country "") (or variant "")))
+
+(defn internationalize [tree locale key & args]
+  (let [pattern (resource tree locale key)
+        mf (doto (MessageFormat. "")
+             ;for some reason it won't work creating the MessageFormat with the
+             ;pattern, maybe I need to assign the locale before the pattern
+             (.setLocale (java-locale locale))
+             (.applyPattern pattern))]
+    (.format mf (to-array args))))
