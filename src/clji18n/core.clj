@@ -70,3 +70,10 @@
   `(binding [*resource-tree* ~tree]
      ~@body))
 
+(defn make-resource-tree [default-bundle & locale-tree-pairs]
+  (let [tree (if default-bundle
+               (add-bundle empty-tree default-bundle)
+               empty-tree)]
+    (reduce #(apply add-bundle %1 %2)
+            tree
+            (partition 2 locale-tree-pairs))))

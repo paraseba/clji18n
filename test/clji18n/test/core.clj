@@ -12,11 +12,10 @@
           es (locale "es")
           en (locale "en")
           es-ar (locale "es" "ar")
-          tree (-> empty-tree
-                 (add-bundle default-bundle)
-                 (add-bundle en en-bundle)
-                 (add-bundle es es-bundle)
-                 (add-bundle es-ar es-ar-bundle))]
+          tree (make-resource-tree default-bundle
+                                   en en-bundle
+                                   es es-bundle
+                                   es-ar es-ar-bundle)]
     (testing has-resource?
       (it "returns false for unknown resources"
         (= false (has-resource? tree es-ar "what?")))
@@ -54,9 +53,9 @@
                         :plural "{0,choice,0#ningún programador Clojure|1#solo un programador Clojure|1<{0,number,integer} programadores Clojure}"}
           en-us (locale "en" "US")
           es-ar (locale "es" "AR")
-          tree (-> empty-tree
-                 (add-bundle en-us en-bundle)
-                 (add-bundle es-ar es-ar-bundle))]
+          tree (make-resource-tree nil
+                                   en-us en-bundle
+                                   es-ar es-ar-bundle)]
 
     (testing "simple messages"
       (it "formats messages without arguments in es"
@@ -97,9 +96,9 @@
 (describe _
   (given [en-bundle {:hi "hi {0}"}
           es-bundle {:hi "hola {0}"}
-          tree (-> empty-tree
-                 (add-bundle (locale "en") en-bundle)
-                 (add-bundle (locale "es") es-bundle))]
+          tree (make-resource-tree nil
+                                   (locale "en") en-bundle
+                                   (locale "es") es-bundle)]
     (it "gets english translation"
       (with-locale (locale "en")
         (with-resources tree
