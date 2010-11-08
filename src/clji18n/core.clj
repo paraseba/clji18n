@@ -55,3 +55,18 @@
              (.setLocale (java-locale locale))
              (.applyPattern pattern))]
     (.format mf (to-array args))))
+
+(def *current-locale*)
+(def *resource-tree*)
+
+(defn _ [key & args]
+  (apply internationalize *resource-tree* *current-locale* key args))
+
+(defmacro with-locale [locale & body]
+  `(binding [*current-locale* ~locale]
+     ~@body))
+
+(defmacro with-resources [tree & body]
+  `(binding [*resource-tree* ~tree]
+     ~@body))
+

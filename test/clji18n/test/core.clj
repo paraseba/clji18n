@@ -93,3 +93,18 @@
           (= "solo un programador Clojure" (internationalize tree es-ar :plural 1)))
         (it "formats plurals"
           (= "2 programadores Clojure" (internationalize tree es-ar :plural 2)))))))
+
+(describe _
+  (given [en-bundle {:hi "hi {0}"}
+          es-bundle {:hi "hola {0}"}
+          tree (-> empty-tree
+                 (add-bundle (locale "en") en-bundle)
+                 (add-bundle (locale "es") es-bundle))]
+    (it "gets english translation"
+      (with-locale (locale "en")
+        (with-resources tree
+          (= "hi Rich" (_ :hi "Rich")))))
+    (it "gets spanish translation"
+      (with-locale (locale "es")
+        (with-resources tree
+          (= "hola Rich" (_ :hi "Rich")))))))
