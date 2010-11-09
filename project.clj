@@ -1,5 +1,5 @@
 (defproject clji18n "0.1.0"
-  :description "FIXME: write"
+  :description "Simple internationalization for Clojure"
   :dependencies [[org.clojure/clojure "1.2.0"]
                    [org.clojure/clojure-contrib "1.2.0"]]
   :dev-dependencies [[vimclojure/server "2.2.0"]
