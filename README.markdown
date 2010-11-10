@@ -39,7 +39,7 @@ There is and will be more to clji18n. To be documented...
 
 ## Installation
 
-Add [clji18n "0.1.0"] to your project.clj
+Add [clji18n "0.1.1"] to your project.clj
 
 ## License
 

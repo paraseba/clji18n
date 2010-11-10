@@ -46,6 +46,31 @@
   (get-resource [bundle key] (get bundle key))
   (has-key? [bundle key] (contains? bundle key)))
 
+(defrecord DynamicResourceMap [default-map fun]
+  ResourceMap
+  (get-resource [this key] (or (get default-map key) (fun key)))
+  (has-key? [this key] true))
+
+(defn dynamic-bundle
+  "Define a resourcemap with a map m and a function f. If a key is found in m, the
+  corresponding value is returned. If the key is not present, the result of calling
+  (f key) is returned. Dynamic bundles always return true when has-key? is called."
+  [m f]
+  (DynamicResourceMap. m f))
+
+(defn prefix-bundle
+  "Define a resourcemap with a map m and a prefix string. If a key is found in m, the
+  corresponding value is returned. If the key is not present, the bundle returns
+  the result of transforming the key to a string and prefixing it with prefix.
+  Prefix bundles always return true when has-key? is called."
+  [m prefix]
+  (dynamic-bundle m
+                  (fn [key]
+                    (let [key (if (instance? clojure.lang.Named key)
+                                (name key)
+                                (str key))]
+                      (str prefix key)))))
+
 (def
   #^{:doc "An empty tree of ResourceMaps"}
   empty-tree

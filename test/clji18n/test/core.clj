@@ -123,3 +123,21 @@
       (with-locale (locale "es")
         (with-resources tree
           (= "hola Rich" (_ :hi "Rich")))))))
+
+(describe dynamic-bundle
+  (given [res (dynamic-bundle {:hi "hola"} inc)]
+    (it "has real keys" (has-key? res :hi))
+    (it "has all keys" (has-key? res "fake one"))
+    (it "gets real keys" (= "hola" (get-resource res :hi)))
+    (it "call function for non existent keys"
+        (= 5 (get-resource res 4)))))
+
+(describe prefix-bundle
+  (given [res (prefix-bundle {:hi "hola"} "test: ")]
+    (it "returns real key values"
+        (= "hola" (get-resource res :hi)))
+    (it "adds prefix for non existent string keys"
+        (= "test: bye" (get-resource res "bye")))
+    (it "adds prefix for non existent keyword keys"
+        (= "test: bye" (get-resource res :bye)))))
+
